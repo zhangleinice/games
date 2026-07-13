@@ -1,5 +1,5 @@
-import { createFirstGame } from "./my-first-game/Game";
+import { firstGame } from "./first-game/Game";
 
 export const demos = {
-  firstgame: createFirstGame,
+  firstgame: firstGame,
 };
