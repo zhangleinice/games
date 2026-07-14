@@ -53,7 +53,7 @@ export class FirstGameScene extends Phaser.Scene {
         this.createColliders();
 
         // 创建方向键对象（上下左右）
-        this.cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard!.createCursorKeys();
 
         // 创建左上角分数文本
         this.scoreText = this.add.text(16, 16, "Score: 0", {
@@ -85,7 +85,7 @@ export class FirstGameScene extends Phaser.Scene {
         }
 
         // 跳跃，按下上方向键，并且玩家站在地面上时才能跳跃
-        if (this.cursors.up.isDown && this.player.body.touching.down)
+        if (this.cursors.up.isDown && (this.player.body as Phaser.Physics.Arcade.Body).touching.down)
         {
             this.player.setVelocityY(-330);
         }
@@ -168,19 +168,19 @@ export class FirstGameScene extends Phaser.Scene {
 
         // 给玩家和星星添加重叠检测（Overlap）
         // 玩家碰到星星时，不会发生物理碰撞，而是调用 collectStar() 收集星星
-        this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+        this.physics.add.overlap(this.player, this.stars, this.collectStar, undefined, this);
 
         // 炸弹与平台发生物理碰撞
         this.physics.add.collider(this.bombs, this.platforms);
         // 玩家碰到炸弹时调用 hitBomb()
-        this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
+        this.physics.add.collider(this.player, this.bombs, this.hitBomb, undefined, this);
     }
 
     // 收集星星
-    private collectStar (_, star)
+    private collectStar (_: unknown, star: unknown)
     {
         // 禁用星星的物理和渲染（相当于消失）
-        star.disableBody(true, true);
+        (star as Phaser.Physics.Arcade.Image).disableBody(true, true);
 
         // 计分
         this.score += 10;
@@ -212,12 +212,12 @@ export class FirstGameScene extends Phaser.Scene {
     }
 
     // 碰到炸弹
-    private hitBomb (player)
+    private hitBomb (player: unknown)
     {
         // 暂停整个物理系统, 玩家、炸弹都会停止运动
         this.physics.pause();
         // 玩家变成红色（受伤效果）
-        player.setTint(0xff0000);
+        (player as Phaser.Physics.Arcade.Sprite).setTint(0xff0000);
         // 播放站立动画（停止奔跑）
         this.player.anims.play('turn');
 
